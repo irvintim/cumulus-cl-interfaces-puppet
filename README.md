@@ -58,11 +58,16 @@ Loopback interface and the management interface `eth0` using DHCP:
 
 ```ruby
 cumulus_interface { 'lo':
-  addr_method => 'loopback'
+  addr_method => 'loopback',
 }
 
 cumulus_interface { 'eth0':
-  addr_method  => 'dhcp'
+  addr_method => 'dhcp',
+}
+
+cumulus_interface { 'eth0':
+  ipv4    => ['192.168.0.10/24'],
+  gateway => '192.168.0.1',
 }
 ```
 
@@ -70,8 +75,8 @@ cumulus_interface { 'eth0':
 
 ```ruby
 cumulus_interface { 'swp33':
-  ipv4 => ['10.30.1.1/24']
-  speed => 1000
+  ipv4  => ['10.30.1.1/24'],
+  speed => 1000,
 }
 ```
 
@@ -79,10 +84,10 @@ cumulus_interface { 'swp33':
 
 ```ruby
 cumulus_interface { 'peerlink.4094':
-  ipv4 => ['10.100.1.0/31']
-  clagd_enable => true
-  clagd_peer_ip => '10.100.1.1/31'
-  clagd_sys_mac => '44:38:39:ff:20:94'
+  ipv4          => ['10.100.1.0/31'],
+  clagd_enable  => true,
+  clagd_peer_ip => '10.100.1.1/31',
+  clagd_sys_mac => '44:38:39:ff:20:94',
 }
 ```
 
@@ -92,7 +97,7 @@ Bond named *peerlink* with the interfaces *swp1* and *swp2* as bond members:
 
 ```ruby
 cumulus_bond { 'peerlink':
-  slaves => ['swp1-2']
+  slaves => ['swp1-2'],
 }
 ```
 
@@ -100,9 +105,9 @@ Bond named *bond0* with the interfaces  *swp3* and  *swp4* as  bond members, the
 
 ```ruby
 cumulus_bond { 'bond0':
-  slaves => ['swp3-4'],
+  slaves    => ['swp3-4'],
   min_links => 2,
-  clag_id => 1
+  clag_id   => 1,
 }
 ```
 
@@ -112,12 +117,12 @@ cumulus_bond { 'bond0':
 
 ```ruby
 cumulus_bridge { 'br10':
-  ports      => ['swp11-12.1', 'swp32.1']
-  ipv4       => ['10.1.1.1/24', '10.20.1.1/24']
-  ipv6       => ['2001:db8:abcd::/48']
-  alias_name =>  'classic bridge'
-  mtu        => 9000
-  mstpctl_treeprio =>  4096
+  ports            => ['swp11-12.1', 'swp32.1'],
+  ipv4             => ['10.1.1.1/24', '10.20.1.1/24'],
+  ipv6             => ['2001:db8:abcd::/48'],
+  alias_name       => 'classic bridge',
+  mtu              => 9000,
+  mstpctl_treeprio => 4096,
 }
 ```
 
@@ -125,12 +130,12 @@ cumulus_bridge { 'br10':
 
 ```ruby
 cumulus_bridge { 'bridge':
-  vlan_aware => true
-  ports      => ['peerlink', 'downlink', 'swp10']
-  vids       => ['1-4094']
-  pvid       => 1
-  stp        => true
-  mstpctl_treeprio  => 4096
+  vlan_aware       => true,
+  ports            => ['peerlink', 'downlink', 'swp10'],
+  vids             => ['1-4094'],
+  pvid             => 1,
+  stp              => true,
+  mstpctl_treeprio => 4096,
 }
 ```
 
@@ -145,6 +150,7 @@ cumulus_bridge { 'bridge':
 * `name` - Identifier for the interface.
 * `ipv4` - Array of IPv4 addresses to be applied to the interface.
 * `ipv6` - Array of IPv6 addresses to be applied to the interface.
+* `gateway` - String of default gateway to be added with the interface.
 * `alias_name` - Interface alias.
 * `addr_method` - Address assignment method, `dhcp` or `loopback`. Default is empty (no address method is set).
 * `speed` - The interface link speed.
@@ -180,6 +186,7 @@ The following CLAG-related attributes are also available. If CLAG is enabled, yo
 * ``lacp_rate`` - LACP bond rate. Default is 1 (fast LACP timeout).
 * ``ipv4`` - Array of IPv4 addresses to be applied to the interface.
 * ``ipv6`` - Array of IPv6 addresses to be applied to the interface.
+* ``gateway`` - String of default gateway to be added with the interface.
 * ``alias_name`` - Interface alias.
 * ``addr_method`` - Address assignment method. May be `dhcp` or empty. Default is empty (no address method is set).
 * ``mtu`` - The interface Maximum Transmission Unit (MTU).
@@ -205,6 +212,7 @@ The following CLAG-related attributes are also available. If CLAG is enabled, yo
 * `name` - Identifier for the bridge interface.
 * `ipv4` - Array of IPv4 addresses to be applied to the interface.
 * `ipv6` - Array of IPv6 addresses to be applied to the interface.
+* `gateway` - String of default gateway to be added with the interface.
 * `alias_name` - Interface alias.
 * `addr_method` - Address assignment method. May be `dhcp` or empty. Default is empty (no address method is set).
 * `mtu` - The interface Maximum Transmission Unit (MTU).

@@ -218,6 +218,10 @@ Puppet::Type.newtype(:cumulus_interface) do
     clagd parameters. It is optional'
   end
 
+  newparam(:gateway) do
+    desc 'default gateway'
+  end
+
   validate do
     myset = [self[:clagd_enable].nil?, self[:clagd_peer_ip].nil?,
              self[:clagd_sys_mac].nil?].to_set

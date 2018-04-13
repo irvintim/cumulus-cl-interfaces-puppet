@@ -1,5 +1,4 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'cumulus', 'ifupdown2.rb'))
-
 Puppet::Type.type(:cumulus_bridge).provide :cumulus do
   confine operatingsystem: [:cumuluslinux]
 
@@ -17,7 +16,7 @@ Puppet::Type.type(:cumulus_bridge).provide :cumulus do
     config.update_alias_name
     config.update_vrr
     # attributes with no suffix like bond-, or bridge-
-    %w(mstpctl_treeprio mtu).each do |attr|
+    %w(mstpctl_treeprio mtu gateway).each do |attr|
       config.update_attr(attr)
     end
     # copy to instance variable

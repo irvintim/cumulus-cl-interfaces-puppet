@@ -22,12 +22,13 @@ class Ifupdown2Config
     filepath = @resource[:location] + '/' + @resource[:name]
     return {} unless File.exist?(filepath)
     json = ''
-    IO.popen("/sbin/ifquery #{@resource[:name]} -o json") do |ifquery|
+    IO.popen("/sbin/ifquery #{@resource[:name]} -o json", :err=>[:child, :out]) do |ifquery|
       json = ifquery.read
     end
     JSON.parse(json)[0]
   rescue StandardError => ex
-    Puppet.warning("ifquery failed: #{ex}")
+    Puppet.debug("ifquery failed: #{ex}")
+    {}
   end
 
   # before 2.5.4 null entries where left in place in hash

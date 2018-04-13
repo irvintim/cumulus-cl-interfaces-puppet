@@ -21,7 +21,9 @@ Puppet::Type.type(:cumulus_interface).provide :cumulus do
     config.update_vrr
     config.update_hwaddress
     # attributes with no suffix like bond-, or bridge-
-    %w(mstpctl_portnetwork mstpctl_bpduguard mstpctl_portbpdufilter mstpctl_portadminedge vxlan_id vxlan_local_tunnelip clagd_enable clagd_priority clagd_backup_ip clagd_args clagd_sys_mac clagd_peer_ip mtu).each do |attr|
+    %w(mstpctl_portnetwork mstpctl_bpduguard mstpctl_portbpdufilter mstpctl_portadminedge
+       vxlan_id vxlan_local_tunnelip clagd_enable clagd_priority clagd_backup_ip clagd_args
+       clagd_sys_mac clagd_peer_ip mtu gateway).each do |attr|
       config.update_attr(attr)
     end
     # copy to instance variable

@@ -200,6 +200,10 @@ Puppet::Type.newtype(:cumulus_bond) do
     end
   end
 
+  newparam(:gateway) do
+    desc 'default gateway'
+  end
+
   validate do
     if self[:slaves].nil?
       fail Puppet::Error, 'bond members/slaves must be configured'

@@ -151,6 +151,10 @@ Puppet::Type.newtype(:cumulus_bridge) do
     end
   end
 
+  newparam(:gateway) do
+    desc 'default gateway'
+  end
+
   validate do
     fail Puppet::Error, 'ports list required' if self[:ports].nil?
 
