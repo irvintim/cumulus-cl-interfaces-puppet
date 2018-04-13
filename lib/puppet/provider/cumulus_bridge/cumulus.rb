@@ -1,4 +1,5 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'cumulus', 'ifupdown2.rb'))
+
 Puppet::Type.type(:cumulus_bridge).provide :cumulus do
   confine operatingsystem: [:cumuluslinux]
 
@@ -6,15 +7,17 @@ Puppet::Type.type(:cumulus_bridge).provide :cumulus do
     config = Ifupdown2Config.new(resource)
     config.update_members('ports', 'bridge-ports')
     config.update_speed
+    config.update_vrf_table
+    config.update_vrf
     config.update_addr_method
     config.update_address
-    %w(mcsnoop vids pvid vlan_aware stp).each do |attr|
+    %w(mcsnoop vids pvid vlan_aware stp aging).each do |attr|
       config.update_attr(attr, 'bridge')
     end
     config.update_alias_name
     config.update_vrr
     # attributes with no suffix like bond-, or bridge-
-    %w(mstpctl_treeprio mtu gateway).each do |attr|
+    %w(mstpctl_treeprio mtu).each do |attr|
       config.update_attr(attr)
     end
     # copy to instance variable

@@ -5,3 +5,5 @@ log/
 vendor/
 .vagrant/
 pkg/
+/checksums.json
+/.idea/

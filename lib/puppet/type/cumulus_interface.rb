@@ -53,7 +53,7 @@ Puppet::Type.newtype(:cumulus_interface) do
 
   newparam(:addr_method) do
     desc 'address assignment method'
-    newvalues(:dhcp, :loopback)
+    newvalues(:dhcp, :loopback, :static)
   end
 
   newparam(:speed) do
@@ -61,6 +61,14 @@ Puppet::Type.newtype(:cumulus_interface) do
     munge do |value|
       @resource.munge_integer(value)
     end
+  end
+
+  newparam(:vrf_table) do
+    desc 'vrf-table set, Must be "auto" or 1001 - 1255'
+  end
+
+  newparam(:vrf) do
+    desc 'vrf set. Must be interface with vrf-table set'
   end
 
   newparam(:mtu) do
@@ -78,6 +86,10 @@ Puppet::Type.newtype(:cumulus_interface) do
     desc 'virtual MAC component of Cumulus Linux VRR config'
   end
 
+  newparam(:hwaddress) do
+    desc 'MAC address override'
+  end
+
   newparam(:vids) do
     desc 'list of vlans. Only configured on vlan aware ports'
     munge do |value|
@@ -92,10 +104,56 @@ Puppet::Type.newtype(:cumulus_interface) do
     end
   end
 
+  newparam(:access) do
+    desc 'vlan transmitted untagged across the link (access vlan)'
+    munge do |value|
+      @resource.munge_integer(value)
+    end
+  end
+
+  newparam(:arp_nd_suppress) do
+    desc 'bridge arp nd suppress setting'
+  end
+
+  newparam(:learning) do
+    desc 'bridge learning mode'
+  end
+
   newparam(:location) do
     desc 'location of interface files'
     defaultto '/etc/network/interfaces.d'
   end
+
+  newparam(:id) do
+    desc 'vlan id for SVI'
+    munge do |value|
+      @resource.munge_integer(value)
+    end
+  end
+
+  newparam(:raw_device) do
+    desc 'VLAN raw-device setting'
+  end
+
+  newparam(:ip_forward,
+           boolean: true,
+           parent: Puppet::Parameter::Boolean) do
+    desc 'ip forward mode'
+  end
+
+  newparam(:ip6_forward,
+           boolean: true,
+           parent: Puppet::Parameter::Boolean) do
+    desc 'ipv6 forward mode'
+  end
+
+  newparam(:vxlan_id) do
+    desc 'VXLAN vlan ID'
+ end
+
+  newparam(:vxlan_local_tunnelip) do
+    desc 'VXLAN local tunnel IP address'
+ end
 
   newparam(:mstpctl_portnetwork,
            boolean: true,
@@ -109,6 +167,12 @@ Puppet::Type.newtype(:cumulus_interface) do
            parent: Puppet::Parameter::Boolean) do
     desc 'configures bpdu guard. Ensure that the port is in vlan
     aware mode'
+  end
+
+  newparam(:mstpctl_portbpdufilter,
+           boolean: false,
+           parent: Puppet::Parameter::Boolean) do
+    desc 'configures port bpdufilter.'
   end
 
   newparam(:mstpctl_portadminedge,
@@ -152,10 +216,6 @@ Puppet::Type.newtype(:cumulus_interface) do
   newparam(:clagd_args) do
     desc 'additional Clag parameters. must be configured with other
     clagd parameters. It is optional'
-  end
-
-  newparam(:gateway) do
-    desc 'default gateway'
   end
 
   validate do

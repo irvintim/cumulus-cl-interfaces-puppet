@@ -48,7 +48,7 @@ Puppet::Type.newtype(:cumulus_bridge) do
 
   newparam(:addr_method) do
     desc 'address assignment method'
-    newvalues(:dhcp)
+    newvalues(:dhcp, :static)
   end
 
   newparam(:speed) do
@@ -56,6 +56,14 @@ Puppet::Type.newtype(:cumulus_bridge) do
     munge do |value|
       @resource.munge_integer(value)
     end
+  end
+
+  newparam(:vrf_table) do
+    desc 'vrf-table set, Must be "auto" or 1001 - 1255'
+  end
+
+  newparam(:vrf) do
+    desc 'vrf set. Must be interface with vrf-table set'
   end
 
   newparam(:mtu) do
@@ -82,6 +90,20 @@ Puppet::Type.newtype(:cumulus_bridge) do
 
   newparam(:pvid) do
     desc 'vlan transmitted untagged across the link (native vlan)'
+    munge do |value|
+      @resource.munge_integer(value)
+    end
+  end
+
+  newparam(:access) do
+    desc 'vlan transmitted untagged across the link (access vlan)'
+    munge do |value|
+      @resource.munge_integer(value)
+    end
+  end
+
+  newparam(:aging) do
+    desc 'bridge aging value'
     munge do |value|
       @resource.munge_integer(value)
     end
@@ -127,10 +149,6 @@ Puppet::Type.newtype(:cumulus_bridge) do
     munge do |value|
       @resource.munge_integer(value)
     end
-  end
-
-  newparam(:gateway) do
-    desc 'default gateway'
   end
 
   validate do

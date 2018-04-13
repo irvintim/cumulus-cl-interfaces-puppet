@@ -7,7 +7,7 @@ Puppet::Type.type(:cumulus_bond).provide :cumulus do
     config.update_members('slaves', 'bond-slaves')
     config.update_addr_method
     config.update_address
-    %w(vids pvid).each do |attr|
+    %w(vids pvid access).each do |attr|
       config.update_attr(attr, 'bridge')
     end
     %w(mode min_links use_carrier miimon lacp_rate xmit_hash_policy
@@ -17,7 +17,7 @@ Puppet::Type.type(:cumulus_bond).provide :cumulus do
     config.update_alias_name
     config.update_vrr
     # attributes with no suffix like bond-, or bridge-
-    %w(mstpctl_portnetwork mstpctl_bpduguard mstpctl_portadminedge clag_id mtu gateway).each do |attr|
+    %w(mstpctl_portnetwork mstpctl_bpduguard mstpctl_portadminedge clag_id mtu).each do |attr|
       config.update_attr(attr)
     end
     # copy to instance variable

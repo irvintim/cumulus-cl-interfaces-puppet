@@ -22,13 +22,12 @@ class Ifupdown2Config
     filepath = @resource[:location] + '/' + @resource[:name]
     return {} unless File.exist?(filepath)
     json = ''
-    IO.popen("/sbin/ifquery #{@resource[:name]} -o json", :err=>[:child, :out]) do |ifquery|
+    IO.popen("/sbin/ifquery #{@resource[:name]} -o json") do |ifquery|
       json = ifquery.read
     end
     JSON.parse(json)[0]
   rescue StandardError => ex
-    Puppet.debug("ifquery failed: #{ex}")
-    {}
+    Puppet.warning("ifquery failed: #{ex}")
   end
 
   # before 2.5.4 null entries where left in place in hash
@@ -113,7 +112,43 @@ class Ifupdown2Config
   def update_alias_name
     return if @resource[:alias_name].nil?
     Puppet.debug "updating alias #{@resource[:name]}"
-    @confighash['config']['alias'] = @resource[:alias_name]
+    @confighash['config']['alias'] = @resource[:name] + ' ' + @resource[:alias_name]
+  end
+
+  def update_vrf_table
+    return if @resource[:vrf_table].nil?
+    Puppet.debug "updating vrf-table #{@resource[:name]}"
+    @confighash['config']['vrf-table'] = @resource[:vrf_table]
+  end
+
+  def update_vrf
+    return if @resource[:vrf].nil?
+    Puppet.debug "updating vrf #{@resource[:name]}"
+    @confighash['config']['vrf'] = @resource[:vrf]
+  end
+
+  def update_ip_forward
+    return if @resource[:ip_forward].nil?
+    Puppet.debug "updating ip_forward #{@resource[:name]}"
+    ip_forward_value = ''
+    if @resource[:ip_forward] == true
+      ip_forward_value = 'on'
+    elsif @resource[:ip_forward] == false
+      ip_forward_value = 'off'
+    end
+    @confighash['config']['ip-forward'] = ip_forward_value
+  end
+
+  def update_ip6_forward
+    return if @resource[:ip6_forward].nil?
+    Puppet.debug "updating ip6_forward #{@resource[:name]}"
+    ip6_forward_value = ''
+    if @resource[:ip6_forward] == true
+      ip6_forward_value = 'on'
+    elsif @resource[:ip6_forward] == false
+      ip6_forward_value = 'off'
+    end
+    @confighash['config']['ip6-forward'] = ip6_forward_value
   end
 
   def update_speed
@@ -129,6 +164,12 @@ class Ifupdown2Config
     vrrstring = @resource[:virtual_mac] + ' ' + @resource[:virtual_ip]
     @confighash['config']['address-virtual'] = vrrstring
     Puppet.debug "updating vrr config #{vrrstring}"
+  end
+
+  def update_hwaddress
+    return if @resource[:hwaddress].nil?
+    @confighash['config']['hwaddress'] = 'ether ' + @resource[:hwaddress]
+    Puppet.debug "updating hwaddress #{@resource[:name]}"
   end
 
   def update_members(attrname, ifupdown_attr)

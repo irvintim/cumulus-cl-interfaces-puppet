@@ -48,7 +48,7 @@ Puppet::Type.newtype(:cumulus_bond) do
 
   newparam(:addr_method) do
     desc 'address assignment method'
-    newvalues(:dhcp)
+    newvalues(:dhcp, :static)
   end
 
   newparam(:mtu) do
@@ -75,6 +75,13 @@ Puppet::Type.newtype(:cumulus_bond) do
 
   newparam(:pvid) do
     desc 'vlan transmitted untagged across the link (native vlan)'
+    munge do |value|
+      @resource.munge_integer(value)
+    end
+  end
+
+  newparam(:access) do
+    desc 'vlan transmitted untagged across the link (access vlan)'
     munge do |value|
       @resource.munge_integer(value)
     end
@@ -191,10 +198,6 @@ Puppet::Type.newtype(:cumulus_bond) do
     munge do |value|
       @resource.munge_array(value)
     end
-  end
-
-  newparam(:gateway) do
-    desc 'default gateway'
   end
 
   validate do

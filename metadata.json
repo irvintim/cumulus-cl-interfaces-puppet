@@ -7,12 +7,12 @@
   "source": "https://github.com/CumulusNetworks/cumulus-cl-interfaces-puppet",
   "project_page": "https://github.com/CumulusNetworks/cumulus-cl-interfaces-puppet",
   "issues_url": "https://github.com/CumulusNetworks/cumulus-cl-interfaces-puppet",
-  "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">= 3.2.0 < 5.0.0"}
-  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "CumulusLinux"
     }
+  ],
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 3.2.0 < 5.0.0"}
   ]
 }
